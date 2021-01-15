@@ -1,0 +1,20 @@
+  
+{% extends "layout.html" %}
+{% block content %}
+    {% for blog in blogs %}
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{  blog.author.user_name }}</a>
+              <small class="text-muted">{{ blog.created_date }}</small>
+            </div>
+            <h2><a class="article-title" href="#">{{ blog.blog_name }}</a></h2>
+            {% if blog.phrase %}
+              <p class="article-content">{{ blog.phrase }}</p>
+            {% else %}
+              <p class="article-content">{{ blog.author.user_name }} has not added a favorite phrase</p>
+            {% endif %}
+          </div>
+        </article>
+    {% endfor %}
+{% endblock content %}
