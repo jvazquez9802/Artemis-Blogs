@@ -1,3 +1,5 @@
+import os
+import secrets 
 from flask import render_template, url_for, redirect, request, flash
 from app import app, db, bcrypt
 from app.forms import RegistrationForm, LoginForm, UpdateAccountForm
@@ -51,12 +53,28 @@ def logout():
     logout_user()
     flash('You logged out','warning')
     return redirect(url_for('home'))
+
+def save_picture(form_picture, dir_pics):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path,'static/'+dir_pics,picture_fn)
+    form_picture.save(picture_path)
     
+    return picture_fn
+
 @app.route("/myblog", methods=['GET','POST'])
 @login_required
 def myblog():
     form = UpdateAccountForm()
     if form.validate_on_submit():
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data, 'profile_pics')
+            current_user.profile_image_file = picture_file
+        if form.cover.data:
+            cover_file = save_picture(form.cover.data, 'cover_pics')
+            current_user.blog[0].cover_image_file = cover_file
+            
         current_user.user_name = form.user_name.data
         current_user.email = form.email.data
         
