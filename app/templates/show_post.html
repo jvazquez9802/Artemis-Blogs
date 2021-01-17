@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block content %}
+  <article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.profile_image_file) }}" alt ="">
+    <div class="media-body md-word">
+        <div class="article-metadata">
+            <a class="mr-2" href="#">{{ post.author.username }}</a>
+            <small class="text-muted">Created: {{ post.created_date.strftime('%Y-%m-%d : %H:%M') }}  -  Last update: {{ post.updated_date.strftime('%Y-%m-%d - %H:%M') }}</small>
+            {% if post.author == current_user %}
+            <div>
+                <a class="btn btn-outline-success btn-sm mt-1 mb-1" href="{{ url_for('posts.update_post', id=post.id) }}">Update</a>
+                <button type="button" class="btn btn-outline-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+            </div>
+            {% endif %}
+        </div>
+        <h2 class="article-title">{{ post.title }}</h2>
+        <h2 class="article-title" style="font-size: large;">Description</h2>
+        <small class="text-muted"><i> {{ post.description }}</i></small>
+        <h2 class="article-title" style="font-size: large;">Content</h2>
+        <div class="card-body">{{ post.content }}</p>
+    </div>
+  </article>
+  <!-- Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Post?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-success" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('posts.delete_post', id=post.id) }}" method="POST">
+            <input class="btn btn-outline-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

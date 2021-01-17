@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+    <div class="caja">
+        <div class="box">
+            <img src="{{ image_cover }}">
+        </div>
+    </div>
+    </br>
+    <div class="media">
+        <img class="rounded-circle account-img" src="{{ image_file }}">
+        <div class="media-body">
+            <h2 class="account-heading">{{ blog.author.user_name }}</h2>
+            {% if blog.phrase != '' and blog.phrase != None %}
+                <p class="text-secondary"><i>{{ blog.phrase }}</i></p>
+            {% else %}
+            <p class='text-muted'><i>The author has not added a favorite phrase.</i></p>
+            {% endif %}
+            <h5 class="card-title">About me:</h5>
+            {% if blog.about != '' and blog.about != None %}
+                <p class="text-secondary">{{ blog.about }}</p>
+            {% else %}
+            <p class='text-muted'> The author has not added a description about itself.</p>
+            {% endif %}
+        </div>
+    </div>
+    <!-- sss -->
+    </br>
+</div>
+{% for post in posts.items %}
+<div class="card">
+    <div class="card-header">
+        Posted: {{ post.created_date.strftime('%Y-%m-%d') }}  ♦  Labels: {{ post.labels }}
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{ post.title }}</h5>
+      <p class="card-text">{{ post.description }}.</p>
+      <a href="{{ url_for('posts.show_post', id=post.id) }}" class="btn btn-dark">View</a>
+    </div>
+  </div>
+    </br>
+{% endfor %}
+{% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if posts.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('users.show_blog',id=blog.id, page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('users.show_blog',id=blog.id, page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+{% endblock content %}

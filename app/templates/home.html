@@ -1,20 +1,38 @@
   
 {% extends "layout.html" %}
 {% block content %}
-    {% for blog in blogs %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{  blog.author.user_name }}</a>
-              <small class="text-muted">{{ blog.created_date }}</small>
-            </div>
-            <h2><a class="article-title" href="#">{{ blog.blog_name }}</a></h2>
-            {% if blog.phrase %}
-              <p class="article-content">{{ blog.phrase }}</p>
-            {% else %}
-              <p class="article-content">{{ blog.author.user_name }} has not added a favorite phrase</p>
-            {% endif %}
+  {% if blogs %}
+    {% for blog in blogs.items %}
+      <article class="media content-section">
+        <div class="media-body">
+          <div class="article-metadata">
+            <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + blog.author.profile_image_file) }}" alt="" />
+            <a class="mr-2" href="{{ url_for('users.show_blog', id=blog.id) }}">{{  blog.author.user_name }}</a>
+            <small class="text-muted">Member since: {{ blog.created_date.strftime('%Y-%m-%d') }}</small>
+            </br>
+            </br>
           </div>
-        </article>
+          <h2><a class="article-title" href="{{ url_for('users.show_blog', id=blog.id) }}">{{ blog.blog_name }}</a></h2>
+          {% if blog.phrase %}
+            <p class="article-content">{{ blog.phrase }}</p>
+          {% else %}
+            <p class="article-content">{{ blog.author.user_name }} has not added a favorite phrase</p>
+          {% endif %}
+        </div>
+      </article>    
     {% endfor %}
+    {% for page_num in blogs.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if blogs.page == page_num %}
+          <a class="btn btn-dark mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-dark mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    <img class="rounded-circle article-img" src="{{ url_for('static', filename='EmptyPage.png') }}" alt=""/>
+  {% endif %}
 {% endblock content %}
