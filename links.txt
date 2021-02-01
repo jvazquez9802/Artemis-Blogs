@@ -1,0 +1,7 @@
+GIT
+
+https://github.com/jvazquez9802/Artemis-Blogs
+
+HEROKU
+
+https://artemis-blogs.herokuapp.com/home

@@ -60,5 +60,5 @@ def delete_post(id):
     db.session.delete(post)
     db.session.commit()
     flash('Post deleted!', 'success')
-    return redirect(url_for('users.show_blog', id=post.id))
+    return redirect(url_for('users.show_blog', id=current_user.id))
 
